@@ -1,9 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:housing_app/Pages/login_page.dart';
 import 'package:housing_app/Pages/signIn_page.dart';
 
+FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+final User? user = auth.currentUser;
+
 class GetStartedPage extends StatefulWidget {
-  const GetStartedPage({Key? key}) : super(key: key);
+  String UserId;
+
+    GetStartedPage({Key? key,required this.UserId}) : super(key: key);
 
   @override
   State<GetStartedPage> createState() => _GetStartedPageState();

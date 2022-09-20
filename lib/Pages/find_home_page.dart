@@ -50,7 +50,7 @@ class FindHomePage extends StatelessWidget {
                 TextButton(
                     onPressed: () {
                       
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>GetStartedPage(),),);
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>GetStartedPage(UserId: '',),),);
                     },
                     child: Text(
                       "SKIP",

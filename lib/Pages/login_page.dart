@@ -1,10 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:housing_app/Pages/bottom_nav.dart';
 
-class LoginPage extends StatelessWidget {
+final auth = FirebaseAuth.instance;
+
+class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  TextEditingController _emailControllar = TextEditingController();
+  TextEditingController _passwordControllar = TextEditingController();
+  bool isloading = false;
+   bool isPasswordType=true;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +46,26 @@ class LoginPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              const TextField(
-                decoration: InputDecoration(hintText: "Username"),
+              TextField(
+                controller: _emailControllar,
+                decoration: InputDecoration(hintText: "Email"),
               ),
               const SizedBox(
                 height: 20,
               ),
-              const TextField(
+              TextField(
+                controller: _passwordControllar,
+                obscureText: isPasswordType,
+                enableSuggestions: isPasswordType,
+                autocorrect: isPasswordType,
+                cursorColor: Colors.green,
                 decoration: InputDecoration(
-                    hintText: "Password",
-                    suffixIcon: Icon(Icons.remove_red_eye_rounded)),
+                  hintText: "Password",
+                  suffixIcon: Icon(Icons.remove_red_eye_rounded),
+                ),
+                keyboardType: isPasswordType
+                    ? TextInputType.visiblePassword
+                    : TextInputType.emailAddress,
               ),
               const SizedBox(
                 height: 10,
@@ -55,13 +79,21 @@ class LoginPage extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(15.0)),
                 child: TextButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    FirebaseAuth.instance.createUserWithEmailAndPassword
+                    (email: _emailControllar.text, 
+                    password: _passwordControllar.text).then((value) {
+                      print("Sign");
                     Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BottomNav(),
                           ),
-                        );
+                        ).onError((error, stackTrace) {
+                          print("error${error.toString()}");
+                        });
+                    });
+                    
                   },
                   child: const Text(
                     "Login",
@@ -90,7 +122,8 @@ class LoginPage extends StatelessWidget {
                   child: const Text(
                     "Login with Google",
                     style: TextStyle(
-                        color: const Color(0xff01957D), fontWeight: FontWeight.bold),
+                        color: const Color(0xff01957D),
+                        fontWeight: FontWeight.bold),
                   ),
                 ),
               ),

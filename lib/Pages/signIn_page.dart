@@ -1,11 +1,19 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:housing_app/Pages/bottom_nav.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  TextEditingController _emailControllar = TextEditingController();
+  TextEditingController _passwordControllar = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,12 +72,19 @@ class SignInPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15.0)),
                 child: TextButton(
                   onPressed: () {
+                    FirebaseAuth.instance.createUserWithEmailAndPassword
+                    (email: _emailControllar.text, 
+                    password: _passwordControllar.text).then((value) {
                     Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => BottomNav(),
                           ),
-                        );
+                        ).onError((error, stackTrace) {
+                          print("error${error.toString()}");
+                        });
+                    });
+                    
                   },
                   child: const Text(
                     "Contiune",
